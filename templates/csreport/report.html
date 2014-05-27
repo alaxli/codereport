@@ -1,0 +1,409 @@
+{% extends "base.html" %}{% load i18n %}
+{% load pagination_tags %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/csreport">CodeReport</a></li>
+        <li class="active">report</li>
+    </ol>
+    <div class="page-header">
+        <h3>
+            <span>代码规范报告 </span>
+            <span><small> 详细信息请访问:<a href="http://sonarqube.address" target="_blank"> sonarqube.address </a></small></span>
+        </h3>
+    </div>
+
+    <legend>{% trans "代码规范趋势报告" %}</legend>
+    <div id="container-trend"></div>
+    <br/>
+    <form class="form-inline" action="{{ action }}" method="post" role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            {% trans "Date" %} 
+            <select id="dateselect" name="dateselect" class="span3" >
+                {% for item in datelist %}
+                <option {% if date == item.0|date:"Y-m-d" %}selected="selected" {% endif %}>{{ item.0|date:"Y-m-d" }}</option>
+                {% endfor %}
+            </select>
+            <button id="submit" class="btn" type="submit">{% trans "Go" %}</button>
+        </div>
+    </form>
+
+    <legend>{% trans "C/C++ Code Standards Report" %}</legend>
+    <!--div id="container-cppcodeline" ></div-->
+    <div id="container-cppproblemline" ></div>
+    <div id="container-cpppercent" ></div>
+    <br/>
+
+    <legend>{% trans "Java Code Standards Report" %}</legend>
+    <!--div id="container-javacodeline" ></div-->
+    <div id="container-javaproblemline" ></div>
+    <div id="container-javapercent" ></div>
+    <br/>
+
+    <!--legend>{% trans "Code Standards Trend" %}</legend-->
+
+</div>
+<script>
+    $(function(){
+        var cppcodeline = {{ cppcodeline|safe }};
+        var cppcodelinename= new Array();
+        var cppcodelinedata= new Array();
+        for(var key in cppcodeline)
+        {
+            cppcodelinename.push(cppcodeline[key][0]);
+            cppcodelinedata.push(cppcodeline[key][1]);
+        }
+        $('#container-cppcodeline').highcharts({
+            chart:{
+                type: 'bar'
+            },
+            title:{
+                text: 'C/C++ Code Line'
+            },
+            xAxis:{
+                categories: cppcodelinename
+            },
+            yAxis:{
+                min: 0,
+                title:{
+                    text: 'code line'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                x: -40,
+                verticalAlign: 'top',
+                y: 120,
+                floating: true,
+                borderColor: '#FFFFFF',
+                borderWidth: 1,
+                shadow: true
+            },
+            tooltip: {
+                valueSuffix: 'lines'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                 //       color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'code lines',
+                data: cppcodelinedata,
+                color: '#2f7ed8'
+            }]
+        });
+
+        var javacodeline = {{ javacodeline|safe }};
+        var javacodelinename= new Array();
+        var javacodelinedata= new Array();
+        for(var key in javacodeline)
+        {
+            javacodelinename.push(javacodeline[key][0]);
+            javacodelinedata.push(javacodeline[key][1]);
+        }
+        $('#container-javacodeline').highcharts({
+            chart:{
+                type: 'bar'
+            },
+            title:{
+                text: 'Java Code Line'
+            },
+            xAxis:{
+                categories: javacodelinename
+            },
+            yAxis:{
+                min: 0,
+                title:{
+                    text: 'code line'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                x: -40,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                borderColor: '#FFFFFF',
+                borderWidth: 1,
+                shadow: true
+            },
+            tooltip: {
+                valueSuffix: 'lines'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                    //    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'code lines',
+                data: javacodelinedata,
+                color: '#2f7ed8'
+            }]
+        });
+
+        var cppproblemline = {{ cppproblemline|safe }};
+        $('#container-cppproblemline').highcharts({
+            chart:{
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title:{
+                text: 'C/C++ 代码规范问题分布'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                x: -40,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                borderColor: '#FFFFFF',
+                borderWidth: 1,
+                shadow: true
+            },
+            tooltip: {
+                //pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'problem lines',
+                data: cppproblemline
+            }]
+        });
+
+        var javaproblemline = {{ javaproblemline|safe }};
+        $('#container-javaproblemline').highcharts({
+            chart:{
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title:{
+                text: 'Java 代码规范问题分布'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                x: -40,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                borderColor: '#FFFFFF',
+                borderWidth: 1,
+                shadow: true
+            },
+            tooltip: {
+                //pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'problem lines',
+                data: javaproblemline
+            }]
+        });
+
+        var cpppercent = {{ cpppercent|safe }};
+        var cpppercentname= new Array();
+        var cpppercentdata= new Array();
+        for(var key in cpppercent)
+        {
+            cpppercentname.push(cpppercent[key][0]);
+            cpppercentdata.push(cpppercent[key][1]);
+        }
+        $('#container-cpppercent').highcharts({
+            chart:{
+                type: 'column'
+            },
+            title:{
+                text: 'C/C++ 代码规范率'
+            },
+            xAxis:{
+                categories: cpppercentname
+            },
+            yAxis:{
+                min: 0,
+                max: 100,
+                title:{
+                    text: 'Percent %'
+                },
+            },
+            tooltip: {
+                pointFormat: '<b> {point.y:.2f} %</b>',
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Percent',
+                data: cpppercentdata,
+                color: '#4897f1',
+                dataLabels: {
+                    enabled : true,
+                    format: '<b>{point.y:.2f}%</b>',
+                }
+            }]
+        });
+
+
+        var javapercent = {{ javapercent|safe }};
+        var javapercentname= new Array();
+        var javapercentdata= new Array();
+        for(var key in javapercent)
+        {
+            javapercentname.push(javapercent[key][0]);
+            javapercentdata.push(javapercent[key][1]);
+        }
+        $('#container-javapercent').highcharts({
+            chart:{
+                type: 'column'
+            },
+            title:{
+                text: 'Java 代码规范率'
+            },
+            xAxis:{
+                categories: javapercentname
+            },
+            yAxis:{
+                min: 0,
+                max: 100,
+                title:{
+                    text: 'Percent %'
+                },
+            },
+            tooltip: {
+                pointFormat: '<b> {point.y:.2f} %</b>',
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Percent',
+                data: javapercentdata,
+                color: '#4897f1',
+                dataLabels: {
+                    enabled : true,
+                    format: '<b>{point.y:.2f}%</b>',
+                }
+            }]
+        });       
+
+        var trendset = {{ trendset|safe }};
+        var len = trendset.length;
+
+        function generateSeries(set){
+            var series = new Array(),
+            len = set.length,
+            map = {};
+
+            for(var i=0; i<len; i++){
+                if(! (set[i][1] in map)){
+                    map[set[i][1]] = [];
+                }
+                var date = new Date(set[i][0]),
+                year = date.getFullYear(),
+                month = date.getMonth() + 1,
+                day = date.getDate();
+                
+                map[set[i][1]].push([Date.UTC(year,month,day),set[i][2]])
+            }
+            for(var key in map){
+                series.push({
+                    name: key,
+                    data: map[key]
+                 });
+            }
+            return series
+        }
+
+        var trendseries = generateSeries(trendset);
+        $('#container-trend').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: '代码规范趋势统计'
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats:{
+                    day: '%Y-%b-%e',
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '%'
+                }
+            },
+            tooltip: {
+                enabled: true,
+                formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                      Highcharts.dateFormat('%Y-%b-%e',this.x)+':'+this.y;
+                }
+            },
+            series: trendseries
+        });
+    });
+</script>
+<style>
+    table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):after {
+       content: " \25B4"
+    }
+</style>
+{% endblock %}

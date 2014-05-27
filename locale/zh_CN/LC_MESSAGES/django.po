@@ -1,0 +1,188 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-05-12 16:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: codereport/settings.py:91
+msgid "English"
+msgstr "英语"
+
+#: codereport/settings.py:92
+msgid "Chinese"
+msgstr "中文"
+
+#: codereport/pagination/templates/pagination/pagination.html:6
+#: codereport/pagination/templates/pagination/pagination.html:8
+msgid "prev"
+msgstr "前一个"
+
+#: codereport/pagination/templates/pagination/pagination.html:22
+#: codereport/pagination/templates/pagination/pagination.html:24
+msgid "next"
+msgstr "后一个"
+
+#: templates/base.html:6 templates/base.html.py:78
+msgid "Report Platform"
+msgstr "报表平台"
+
+#: templates/base.html:79
+msgid "SVNReport"
+msgstr "SVN报表"
+
+#: templates/base.html:80
+msgid "CodeReport"
+msgstr "代码规范报表"
+
+#: templates/base.html:81
+msgid "Data"
+msgstr "数据"
+
+#: templates/base.html:82
+msgid "Report"
+msgstr "报表"
+
+#: templates/base.html:126
+msgid "logout"
+msgstr "退出"
+
+
+#: templates/index.html:4
+msgid "Report Platform, make simple reports!"
+msgstr "报表平台，提供一些简单报表"
+
+#: templates/index.html:6
+msgid "This platform provide some simple reports !"
+msgstr "提供一些简单报表"
+
+#: templates/index.html:11
+msgid "SVN Report"
+msgstr "SVN报表"
+
+#: templates/index.html:13
+msgid "SVN 代码产出周报"
+msgstr ""
+
+#: templates/index.html:14 templates/index.html.py:23 templates/index.html:32
+msgid "View details"
+msgstr "查看详情"
+
+#: templates/index.html:20
+msgid "Coding Standards Report"
+msgstr "代码规范报表"
+
+#: templates/index.html:22
+msgid "代码规范周报"
+msgstr ""
+
+#: templates/index.html:29
+msgid "Other Report"
+msgstr ""
+
+#: templates/index.html:31
+msgid "Coming soon ..."
+msgstr ""
+
+#: templates/login.html:6
+msgid "Code Report"
+msgstr "代码报表平台"
+
+#: templates/login.html:89
+msgid "Username"
+msgstr "用户"
+
+#: templates/login.html:92
+msgid "Password"
+msgstr "密码"
+
+#: templates/login.html:95
+msgid "Login"
+msgstr "登录"
+
+#: templates/csreport/data.html:20 templates/svnreport/data.html:20
+msgid "From"
+msgstr ""
+
+#: templates/csreport/data.html:22 templates/svnreport/data.html:22
+msgid "To"
+msgstr ""
+
+#: templates/csreport/data.html:24 templates/svnreport/data.html:24
+msgid "Go"
+msgstr ""
+
+#: templates/csreport/data.html:31
+msgid "Project"
+msgstr "项目"
+
+#: templates/csreport/data.html:32
+msgid "Language"
+msgstr "语言"
+
+#: templates/csreport/data.html:33
+msgid "CodeLine"
+msgstr "代码行"
+
+#: templates/csreport/data.html:34
+msgid "ProblemLine"
+msgstr "问题行"
+
+#: templates/csreport/data.html:35 templates/svnreport/data.html:32
+#: templates/svnreport/report.html:27 templates/svnreport/report.html.py:55
+msgid "Group"
+msgstr "项目组"
+
+#: templates/csreport/data.html:36 templates/svnreport/data.html:31
+#: templates/svnreport/report.html:26 templates/svnreport/report.html.py:54
+msgid "Department"
+msgstr "部门"
+
+#: templates/csreport/data.html:37 templates/svnreport/data.html:34
+msgid "Date"
+msgstr "日期"
+
+#: templates/csreport/report.html:17
+msgid "C/C++ Code Standards Report"
+msgstr "C/C++代码规范报告"
+
+#: templates/csreport/report.html:24
+msgid "Java Code Standards Report"
+msgstr "Java代码规范报告"
+
+#: templates/csreport/report.html:30
+msgid "Code Standards Trend"
+msgstr "代码规范趋势"
+
+#: templates/svnreport/data.html:33 templates/svnreport/report.html:56
+msgid "User"
+msgstr "用户"
+
+#: templates/svnreport/data.html:35
+msgid "Commit"
+msgstr "提交"
+
+#: templates/svnreport/data.html:36 templates/svnreport/report.html:28
+#: templates/svnreport/report.html.py:57
+msgid "CodeOutput"
+msgstr "代码量"
+
+#: templates/svnreport/report.html:17
+msgid "Department & Group Report"
+msgstr "部门&项目组报告"
+
+#: templates/svnreport/report.html:46
+msgid "User Code Output Report"
+msgstr "用户代码量报告"

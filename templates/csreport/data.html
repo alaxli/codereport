@@ -1,0 +1,72 @@
+{% extends "base.html" %}{% load i18n %}
+{% load pagination_tags %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/csreport">CodeReport</a></li>
+        <li class="active">Data</li>
+    </ol>
+    <div class="page-header">
+        <h3>
+            <span>Code Standards Report Data </span>
+            <span><small> report data for defail</small></span>
+        </h3>
+    </div>
+
+    <form class="form-inline" action="{{ action }}" method="post" role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            {% trans "Date" %} 
+            <select id="dateselect" name="dateselect" class="span3">
+                {% for item in datelist %}
+                <option {% if date == item.0|date:"Y-m-d" %}selected="selected" {% endif %}>{{ item.0|date:"Y-m-d" }}</option>
+                {% endfor %}
+            </select>
+            <button id="search" class="btn" type="button">{% trans "Go" %}</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{% trans "Project" %}</th>
+                <th>{% trans "Language" %}</th>
+                <th>{% trans "CodeLine" %}</th>
+                <th>{% trans "ProblemLine" %}</th>
+                <th>{% trans "Group" %}</th>
+                <th>{% trans "Department" %}</th>
+                <th>{% trans "Date" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% autopaginate dataset 20 %}
+            {% for item in dataset %}
+            <tr>
+                <td>{{ item.0 }}</td>
+                <td>{{ item.1 }}</td>
+                <td>{{ item.2 }}</td>
+                <td>{{ item.3 }}</td>
+                <td>{{ item.4 }}</td>
+                <td>{{ item.5 }}</td>
+                <td>{{ item.6|date:"Y-m-d" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% paginate %}
+</div>
+<script>
+    $(function(){
+        $( "#search" )
+           .button()
+           .click(function(){
+               var dateselect = $( "#dateselect" ).find("option:selected").text();
+               console.log(dateselect);
+               if ( dateselect != "" ){
+                   window.location.href="/csreport/data/" + dateselect;
+               }
+           });
+    });
+</script>
+{% endblock %}

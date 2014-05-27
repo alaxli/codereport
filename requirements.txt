@@ -1,0 +1,6 @@
+Django
+MySQL-python
+python-ldap
+South
+django-auth-ldap
+simplejson

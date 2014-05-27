@@ -1,0 +1,96 @@
+{% extends "base.html" %}{% load i18n %}
+{% load pagination_tags %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/svnreport">SVNReport</a></li>
+        <li><a href="/svnreport/data">Data</a></li>
+        <!--li class="active">Data</li-->
+    </ol>
+    <div class="page-header">
+        <h3>
+            <span>SVN Report Data </span>
+            <span><small> report data for defail</small></span>
+        </h3>
+    </div>
+
+    <form class="form-inline" action="{{ action }}" method="post" role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            {% trans "From" %} 
+            <input type="text" id="start_date" name="start_date" placeholder="{{start_date|date:"Y-m-d"}}"/>
+            {% trans "To" %} 
+            <input type="text" id="end_date" name="end_date" placeholder="{{end_date|date:"Y-m-d"}}"/>
+            <button id="search" class="btn" type="button">{% trans "submit" %}</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{% trans "Department" %}</th>
+                <th>{% trans "Group" %}</th>
+                <th>{% trans "User" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Commit" %}</th>
+                <th>{% trans "CodeOutput" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% autopaginate svndataset 20 %}
+            {% for item in svndataset %}
+            <tr>
+                <td>{{ item.0 }}</td>
+                <td>{{ item.1 }}</td>
+                <td>{{ item.2 }}</td>
+                <td>{{ item.3|date:"Y-m-d" }}</td>
+                <td>{{ item.4 }}</td>
+                <td>{{ item.5 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% paginate %}
+</div>
+<script>
+    $(function(){
+        var startdate = "{{ start_date|date:"Y-m-d" }}",
+        enddate = "{{ end_date|date:"Y-m-d" }}";
+
+        $( "#start_date" ).datepicker({ dateFormat: "yy-mm-dd" });
+        $( "#end_date" ).datepicker({ dateFormat: "yy-mm-dd" });
+        $( "#search" )
+           .button()
+           .click(function(){
+               var start_date = $("#start_date").datepicker('getDate');
+               if (!start_date){
+                   start_date = startdate;
+               }
+               else{
+                   var start_year = start_date.getFullYear(),
+                   start_month = start_date.getMonth() + 1,
+                   start_day = start_date.getDate();
+                   start_date = start_year+'-'+start_month+'-'+start_day;
+               }
+               var end_date = $("#end_date").datepicker('getDate');
+               console.log(end_date)
+               if (!end_date){
+                   end_date = enddate;
+               }
+               else{
+                   var end_year = end_date.getFullYear(),
+                   end_month = end_date.getMonth() + 1,
+                   end_day = end_date.getDate();
+                   end_date = end_year+'-'+end_month+'-'+end_day;
+               }
+               console.log(start_date);
+               //if ( start_date != "" && end_date != "" ){
+               window.location.href="/svnreport/data/f" + start_date+
+                                    'to'+ end_date;
+              // }
+             //  alert(date);
+           });
+    });
+</script>
+{% endblock %}

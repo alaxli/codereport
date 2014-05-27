@@ -1,0 +1,48 @@
+{% extends "base.html" %}{% load i18n %}
+{% block content %}
+    <div class="jumbotron">
+        <h2>{% trans "Report Platform, make simple reports!" %}</h2>
+        <br />
+        <p>{% trans "This platform provide some simple reports !" %}</p>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "SVN代码量统计报告" %}</div>
+                <div class="panel-body">
+                    <p>{% trans "提供各部门、项目组的代码行数统计报告，提供各语言统计报告" %}</p>
+                    <p><a class="btn" href="/svnreport/codeline">{% trans "View details" %} &raquo;</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "SVN代码更新量报告" %}</div>
+                <div class="panel-body">
+                    <p>{% trans "提供各部门、项目组每周的代码更新量报告，提供个人的产出统计排名" %}</p>
+                    <p><a class="btn" href="/svnreport/updatereport">{% trans "View details" %} &raquo;</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "代码规范报告" %}</div>
+                <div class="panel-body">
+                    <p>{% trans "提供各项目组的代码规范报告" %}</p>
+                    <p><a class="btn" href="/csreport/report">{% trans "View details" %} &raquo;</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans "comming soon" %}</div>
+                <div class="panel-body">
+                    <p>{% trans "comming soon" %}</p>
+                    <p><a class="btn" href="#">{% trans "View details" %} &raquo;</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,242 @@
+{% extends "base.html" %}{% load i18n %}
+{% load pagination_tags %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/svnreport">SVNReport</a></li>
+        <li class="active">report</li>
+    </ol>
+    <div class="page-header">
+        <h3>
+            <span>SVN 代码更新量统计 </span>
+            <span><small> 每周svn代码的更新量 </small></span>
+        </h3>
+    </div>
+    <form class="form-inline" action="{{ action }}" method="post" role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            {% trans "From" %} 
+            <input type="text" id="start_date" name="start_date" placeholder="{{start_date|date:"Y-m-d"}}" />
+            {% trans "To" %} 
+            <input type="text" id="end_date" name="end_date" placeholder="{{end_date|date:"Y-m-d"}}" />
+            <button id="submit" class="btn" type="submit">{% trans "submit" %}</button>
+        </div>
+    </form>
+    <legend>{% trans "Department & Group Report" %}</legend>
+    <!--div id="container-department" style="width:600px;height:400px;"></div-->
+    <div id="container-department" ></div>
+    <br></br>
+    <!--<div id="tableContainer"  style=" overflow-x:auto ;overflow-y: auto; height: 410px; "> --> 
+    <div>
+    <table id="DGReport" class="table table-bordered table-striped sortable table-hover">
+        <thead>
+            <tr>
+                <th>{% trans "Department" %}</th>
+                <th>{% trans "Group" %}</th>
+                <th>{% trans "CodeOutput" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key,value in svnreportdict.items %}
+            {% for k,v in value.items %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ k }}</td>
+                <td>{{ v }}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn-link pull-right" onclick="AddRow('DGReport')"><<<更多/隐藏</button>
+</div>
+<br/>
+    <legend>{% trans "User Code Output Report" %}</legend>
+
+    <!-- <div id="tableContainer"  style=" overflow-x:auto ;overflow-y: auto; height: 410px; "> --> 
+   
+    <div>
+    <table id="UCOReport" class="table table-bordered table-striped sortable table-hover">
+        <thead>
+            <tr>
+                <th>{% trans "No." %}</th>
+                <th>{% trans "Department" %}</th>
+                <th>{% trans "Group" %}</th>
+                <th>{% trans "User" %}</th>
+                <th>{% trans "CodeOutput" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in svnuserset %}
+            <tr>
+                <td>{{ forloop.counter }}{{line}}</td>
+                <td>{{ item.0 }}</td>
+                <td>{{ item.1 }}</td>
+                <td>{{ item.2 }}</td>
+                <td>{{ item.3 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn-link pull-right" onclick="AddRow('UCOReport')"><<<更多/隐藏</button>
+</div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#DGReport tr").each(function(i){
+            if(i>10){
+                $(this).hide();    
+            }
+        });
+        $("#UCOReport tr").each(function(i){
+            if(i>10){
+                $(this).hide();    
+            }
+        });
+    });
+
+function   AddRow(id){
+    $("#"+id+" tr").each(function(i){
+        if(i>10){
+            $(this).fadeToggle("slow");    
+        }
+     });           
+ }   
+</script>
+<script>
+    $( "#start_date" ).datepicker({ dateFormat: "yy-mm-dd" });
+    $( "#end_date" ).datepicker({ dateFormat: "yy-mm-dd" });
+</script>
+
+<script>
+    $(function(){
+        var svnreport = {{ svnreportset|safe }};
+        var dplist= new Array();
+        for(var key in svnreport)
+        {
+            dplist.push(key);
+        }
+
+
+        var colors = Highcharts.getOptions().colors,
+        categories = dplist,
+        name = '部门';
+
+        function generateData(svnreport){
+            var data = new Array();
+            var i = 0;
+            for (var key in svnreport){
+                var groupname = new Array(),
+                groupdata = new Array(),
+                totaldata = 0;
+                for (var k in svnreport[key]){
+                    groupname.push(k);
+                    groupdata.push(svnreport[key][k]);
+                    totaldata += svnreport[key][k];
+                }
+                
+                data.push({
+                    y: totaldata,
+                    color: colors[i],
+                    drilldown: {
+                        name: key,
+                        categories: groupname,
+                        data: groupdata,
+                        color: colors[i]
+                    }
+                });
+                i++;
+            }
+            return data;
+        };
+        var data = generateData(svnreport);
+
+        function setChart(name, categories, data, color) {
+            chart.xAxis[0].setCategories(categories, false);
+            chart.series[0].remove(false);
+            chart.addSeries({
+                name: name,
+                data: data,
+                color: color || 'white'
+            },false);
+            chart.redraw();
+        }
+
+        
+        var chart = $('#container-department').highcharts({
+            chart:{
+                type: 'column'
+            },
+            title:{
+                text: '部门&项目组代码更新量统计'
+            },
+            subtitle:{
+                text: '点击列柱查看项目组信息，再次单击返回'
+            },
+            xAxis:{
+                categories: categories
+            },
+            yAxis:{
+                min : 0,
+                title:{
+                    text: 'code line'
+                },
+            },
+            tooltip: {
+                formatter: function() {
+                    var point = this.point,
+                    s = this.x + ':<b>' + this.y + ' code lines</b><br/>';
+                    if (point.drilldown) {
+                        s += 'Click to view '+ point.category ;
+                    } else {
+                        s += 'Click to return';
+                    }
+                    return s;
+                }
+            },
+            plotOptions: {
+                column: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click : function() {
+                                var drilldown = this.drilldown;
+                                if (drilldown) { // drill down
+                                    setChart(drilldown.name, drilldown.categories, drilldown.data, drilldown.color);
+                                    } else { // restore
+                                    setChart(name, categories, data);
+                                }
+                            } //end function
+                        } // end events
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        color: colors[0],
+                        style: {
+                            fontWeight: 'bold'
+                        },
+                        formatter: function() {
+                            return this.y ;
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: name,
+                data: data,
+                color: 'white'
+            }],
+            exporting: {
+                enabled: false
+            }
+        })
+        .highcharts();
+    });
+</script>
+<style>
+    table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):after {
+       content: " \25B4\25BE"
+    }
+</style>
+{% endblock %}
