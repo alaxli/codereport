@@ -33,14 +33,74 @@
         </div>
         <div class="col-md-2"></div>
     </div>
-    <br/>
-    <legend>{% trans "代码量趋势统计" %}</legend>
-    <div id="container-codeline" ></div>
-    <legend>{% trans "部门代码量统计" %}</legend>
-    <div id="container-department" ></div>
-    <legend>{% trans "语言分布统计" %}</legend>
-    <div id="container-language" style="height:1200px;"></div>
 
+   <br />
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse0">
+               {% trans "代码量趋势统计" %}
+            </a>
+          </h4>
+       </div>
+
+      <div id="collapse0" class="panel-collapse collapse in">
+        <div class="panel-body">
+           <div id="container-codeline" ></div>
+        </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse -->
+   </div> <!-- end div panel -->
+
+   <div class="panel panel-success">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse1">
+                {% trans "部门代码量统计(语言)" %}
+            </a>
+          </h4>
+      </div>
+      <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <div id="container-department" ></div>
+        </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse -->
+   </div> <!-- end div panel -->
+
+   <div class="panel panel-success">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse2">
+                {% trans "部门代码量统计(项目组)" %}
+            </a>
+          </h4>
+      </div>
+      <div id="collapse2" class="panel-collapse collapse in">
+        <div class="panel-body">
+           <div id="container-dpgroups" ></div>
+        </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse -->
+   </div> <!-- end div panel -->
+
+   <div class="panel panel-info">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse3">
+               {% trans "语言分布统计" %}
+            </a>
+          </h4>
+     </div>
+      <div id="collapse3" class="panel-collapse collapse in">
+        <div class="panel-body">
+    <div id="container-language" style="height:1200px;"></div>
+        </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse -->
+   </div> <!-- end div panel -->
+
+</div>
 
 <script>
     $(function(){
@@ -68,7 +128,7 @@
                 }
                 var date = new Date(codelineset[i][0]),
                 year = date.getFullYear(),
-                month = date.getMonth() + 1,
+                month = date.getMonth(),
                 day = date.getDate();
                 
                 map[codelineset[i][1]].push([Date.UTC(year,month,day),codelineset[i][2]])
@@ -82,6 +142,7 @@
             return series
         }
 
+        // 代码量趋势统计
         var series = generateSeries(codelineset);
         $('#container-codeline').highcharts({
             chart: {
@@ -115,6 +176,7 @@
             series: series
         });
 
+        // 部门 - 语言 统计
         var departmentset = {{ departmentset|safe }};
         var dplist= new Array();
         for(var key in departmentset)
@@ -173,7 +235,7 @@
                 type: 'column'
             },
             title:{
-                text: '部门代码量统计报告'
+                text: '部门代码量统计报告(语言)'
             },
             subtitle:{
                 text: '点击列柱查看语言信息，再次单击返回'+'  (日期: ' + date + ')'
@@ -236,6 +298,7 @@
         })
         .highcharts();
 
+        // 语言排名统计
         var languageset = {{ languageset|safe }},
         languagename = new Array(),
         languagedata = new Array(),
@@ -249,7 +312,7 @@
                 type: 'bar'
             },
             title:{
-                text: '语言分布统计报告'
+                text: '语言排名报表'
             },
             subtitle:{
                 text: '(日期: ' + date + ')'
@@ -279,6 +342,96 @@
                 color: '#4897f1'
             }]
         });
+
+
+        // 部门 - 业务组 统计
+        var dpgroupsset = {{ dpgroupsset|safe }};
+
+
+        var categories = dplist,
+        name = '技术产品部';
+
+        var dpgroupsdata = generateData(dpgroupsset);
+
+        function setChart_dpgroups(name, categories, data, color) {
+            chart_dpgroups.xAxis[0].setCategories(categories, false);
+            chart_dpgroups.series[0].remove(false);
+            chart_dpgroups.addSeries({
+                name: name,
+                data: data,
+                color: color || 'white'
+            },false);
+            chart_dpgroups.redraw();
+        }
+
+        var chart_dpgroups = $('#container-dpgroups').highcharts({
+            chart:{
+                type: 'column'
+            },
+            title:{
+                text: '部门代码量统计报表(项目组)'
+            },
+            subtitle:{
+                text: '点击列柱查看项目组信息，再次单击返回'+'  (日期: ' + date + ')'
+            },
+            xAxis:{
+                categories: categories
+            },
+            yAxis:{
+                title:{
+                    text: 'code line'
+                },
+            },
+            tooltip: {
+                formatter: function() {
+                    var point = this.point,
+                    s = this.x + ':<b>' + this.y + ' code lines</b><br/>';
+                    if (point.drilldown) {
+                        s += 'Click to view '+ point.category ;
+                    } else {
+                        s += 'Click to return';
+                    }
+                    return s;
+                }
+            },
+            plotOptions: {
+                column: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click : function() {
+                                var drilldown = this.drilldown;
+                                if (drilldown) { // drill down
+                                    setChart_dpgroups(drilldown.name, drilldown.categories, drilldown.data, drilldown.color);
+                                    } else { // restore
+                                    setChart_dpgroups(name, categories, dpgroupsdata);
+                                }
+                            } //end function
+                        } // end events
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        color: colors[0],
+                        style: {
+                            fontWeight: 'bold'
+                        },
+                        formatter: function() {
+                            return this.y ;
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: name,
+                data: dpgroupsdata,
+                color: 'white'
+            }],
+            exporting: {
+                enabled: false
+            }
+        })
+        .highcharts();
+
     });
 </script>
 {% endblock %}

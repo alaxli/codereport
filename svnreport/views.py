@@ -6,7 +6,7 @@ from codereport.lib.django_util import render
 from svnreport.models import svnproject,svnreport
 from svnreport.tasks import get_svndata,get_svnreport,get_userreport
 from svnreport.tasks import get_codeline,get_datelist,get_department
-from svnreport.tasks import get_language,get_count
+from svnreport.tasks import get_language,get_count,get_department_groups
 #from django.core.serializers.json import DjangoJSONEncoder
 #from django.shortcuts import get_object_or_404
 #from codereport.lib.exceptions_renderable import PopupException
@@ -104,6 +104,16 @@ def codeline(request):
         departmentdict[department][language]=count
     departmentset = json.dumps(departmentdict)
 
+    # department - groups set
+    dpgroupsdict = {}
+    dpgroupsset= get_department_groups(date)
+    for row in dpgroupsset:
+        (department,groups,count) = row
+        if not dpgroupsdict.has_key(department):
+            dpgroupsdict[department] = {}
+        dpgroupsdict[department][groups]=count
+    dpgroupsset = json.dumps(dpgroupsdict)
+
     #languagedict = {}
     languageset= get_language(date)
     #for row in languageset:
@@ -121,6 +131,7 @@ def codeline(request):
     return render("svnreport/codeline.html",request,{
         'codelineset': codelineset,
         'departmentset': departmentset,
+        'dpgroupsset': dpgroupsset,
         'languageset': languageset,
         'date': date,
         'count_department': count_department,
@@ -129,4 +140,5 @@ def codeline(request):
         'count_language': count_language,
         'request': request,
         })
+
 

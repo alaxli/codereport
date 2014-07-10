@@ -189,3 +189,27 @@ def get_count(item,table):
         print "Mysql Error %d: %s" % (e.args[0], e.args[1])
     return len(resultset)
 
+def get_department_groups(date):
+    resultset = []
+    try:
+        conn = MySQLdb.connect(host = settings_local.DATABASES['default']['HOST'],
+                user = settings_local.DATABASES['default']['USER'],
+                passwd = settings_local.DATABASES['default']['PASSWORD'],
+                db = settings_local.DATABASES['default']['NAME'],
+                port = int(settings_local.DATABASES['default']['PORT']),
+                charset='utf8')
+        cur = conn.cursor()
+        command = "select department,groups,sum(code) \
+                from svnreport_svnproject,svnreport_codeline \
+                where svnreport_codeline.language = 'Total' \
+                and svnreport_codeline.date = '%s' \
+                and svnreport_svnproject.id=svnreport_codeline.svnproject_id \
+                group by department,groups;" % date
+        cur.execute(command)
+        for row in cur.fetchall():
+            resultset.append(row)
+        cur.close()
+        conn.close()
+    except MySQLdb.Error,e:
+        print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+    return resultset
