@@ -80,7 +80,11 @@ Run
         python manage.py runserver ip:8000
 
 
-* Apache + wsgi :将apache-conf下 codereport.conf 文件拷贝至apache配置目录下，重启httpd
+* Apache + wsgi 
+
+
+        修改codereport.wsgi中 virtualenv 的目录位置
+        将apache-conf下 codereport.conf 文件拷贝至apache配置目录下，重启httpd
 
 
 Demo
