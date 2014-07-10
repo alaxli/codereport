@@ -84,7 +84,7 @@ Run
 
 
         修改codereport.wsgi中 virtualenv 的目录位置
-        将apache-conf下 codereport.conf 文件拷贝至apache配置目录下，重启httpd
+        将apache-conf下 codereport.conf 文件拷贝至apache配置目录下，修改相关配置，重启httpd
 
 
 Demo
