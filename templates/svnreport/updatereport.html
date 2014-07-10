@@ -23,12 +23,39 @@
             <button id="submit" class="btn" type="submit">{% trans "submit" %}</button>
         </div>
     </form>
-    <legend>{% trans "Department & Group Report" %}</legend>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse0">
+               {% trans "Department & Group Report" %}
+            </a>
+          </h4>
+      </div>
+
     <!--div id="container-department" style="width:600px;height:400px;"></div-->
-    <div id="container-department" ></div>
-    <br></br>
+      <div id="collapse0" class="panel-collapse collapse in">
+        <div class="panel-body">
+           <div id="container-department" ></div>
+         </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse0 -->
+   </div> <!-- end div panel -->
+
+
     <!--<div id="tableContainer"  style=" overflow-x:auto ;overflow-y: auto; height: 410px; "> --> 
-    <div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse1">
+               {% trans "部门&项目组统计表格" %}
+            </a>
+          </h4>
+      </div>
+
+      <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
     <table id="DGReport" class="table table-bordered table-striped sortable table-hover">
         <thead>
             <tr>
@@ -50,13 +77,24 @@
         </tbody>
     </table>
     <button type="button" class="btn-link pull-right" onclick="AddRow('DGReport')"><<<更多/隐藏</button>
-</div>
-<br/>
-    <legend>{% trans "User Code Output Report" %}</legend>
+         </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse1 -->
+   </div> <!-- end div panel -->
+    
+    <div class="panel panel-success">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse2">
+                {% trans "用户代码量排名" %}
+            </a>
+          </h4>
+       </div>
 
     <!-- <div id="tableContainer"  style=" overflow-x:auto ;overflow-y: auto; height: 410px; "> --> 
    
-    <div>
+      <div id="collapse2" class="panel-collapse collapse in">
+        <div class="panel-body">
     <table id="UCOReport" class="table table-bordered table-striped sortable table-hover">
         <thead>
             <tr>
@@ -80,7 +118,10 @@
         </tbody>
     </table>
     <button type="button" class="btn-link pull-right" onclick="AddRow('UCOReport')"><<<更多/隐藏</button>
-</div>
+         </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse1 -->
+   </div> <!-- end div panel -->
+
 </div>
 <script type="text/javascript">
     $(document).ready(function(){
