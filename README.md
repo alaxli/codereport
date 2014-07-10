@@ -51,6 +51,8 @@ Install
         cd internal
         mv settings_local.py.example settings_local.py
         vim settings_local.py #配置LDAP信息和数据库信息
+        如果暂时不用ldap，需要修改settings.py,注释掉下面一行
+        #    'codereport.auth.backend.LdapBackend',
 
 
 * 配置数据库
@@ -64,8 +66,8 @@ Install
 
 
         python manage.py syncdb
-        python manage.py schemamigration svnreport --auto
-        python manage.py schemamigration csreport --auto  
+        python manage.py schemamigration svnreport --init
+        python manage.py schemamigration csreport --init 
         python manage.py migrate svnreport
         python manage.py migrate csreport
 
