@@ -83,3 +83,7 @@ Run
 * Apache + wsgi :将apache-conf下 codereport.conf 文件拷贝至apache配置目录下，重启httpd
 
 
+Demo
+=====
+* http://115.28.87.99:8080 用户名:root 密码:codereport
+
