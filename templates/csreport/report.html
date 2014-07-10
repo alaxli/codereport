@@ -14,9 +14,23 @@
         </h3>
     </div>
 
-    <legend>{% trans "代码规范趋势报告" %}</legend>
-    <div id="container-trend"></div>
-    <br/>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse0">
+               {% trans "代码规范趋势报表" %}
+            </a>
+          </h4>
+       </div>
+      <div id="collapse0" class="panel-collapse collapse in">
+        <div class="panel-body">
+             <div id="container-trend"></div>
+         </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse1 -->
+   </div> <!-- end div panel -->
+
+    <legend>
     <form class="form-inline" action="{{ action }}" method="post" role="form">
         {% csrf_token %}
         <div class="form-group">
@@ -29,20 +43,42 @@
             <button id="submit" class="btn" type="submit">{% trans "Go" %}</button>
         </div>
     </form>
+    </legend>
+    <div class="panel panel-success">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse1">
+                 {% trans "C/C++ Code Standards Report" %}
+            </a>
+          </h4>
+       </div>
 
-    <legend>{% trans "C/C++ Code Standards Report" %}</legend>
-    <!--div id="container-cppcodeline" ></div-->
-    <div id="container-cppproblemline" ></div>
-    <div id="container-cpppercent" ></div>
-    <br/>
+      <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
+            <div id="container-cppproblemline" ></div>
+            <div id="container-cpppercent" ></div>
+         </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse1 -->
+   </div> <!-- end div panel -->
 
-    <legend>{% trans "Java Code Standards Report" %}</legend>
-    <!--div id="container-javacodeline" ></div-->
-    <div id="container-javaproblemline" ></div>
-    <div id="container-javapercent" ></div>
-    <br/>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="glyphicon glyphicon-stats txt-color-darken"> </i>
+            <a data-toggle="collapse" data-toggle="collapse" href="#collapse2">
+                  {% trans "Java Code Standards Report" %}
+            </a>
+          </h4>
+       </div>
 
-    <!--legend>{% trans "Code Standards Trend" %}</legend-->
+      <div id="collapse2" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <div id="container-javaproblemline" ></div>
+          <div id="container-javapercent" ></div>
+         </div> <!-- end div panel-body -->
+     </div> <!-- end div collapse1 -->
+   </div> <!-- end div panel -->
 
 </div>
 <script>
@@ -356,7 +392,7 @@
                 }
                 var date = new Date(set[i][0]),
                 year = date.getFullYear(),
-                month = date.getMonth() + 1,
+                month = date.getMonth(),
                 day = date.getDate();
                 
                 map[set[i][1]].push([Date.UTC(year,month,day),set[i][2]])
@@ -381,7 +417,7 @@
             xAxis: {
                 type: 'datetime',
                 dateTimeLabelFormats:{
-                    day: '%Y-%b-%e',
+                    day: '%e.%b',
                 }
             },
             yAxis: {
