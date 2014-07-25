@@ -65,9 +65,9 @@ Install
 * 初始化数据库
 
 
-        python manage.py syncdb
         python manage.py schemamigration svnreport --init
         python manage.py schemamigration csreport --init 
+        python manage.py syncdb
         python manage.py migrate svnreport
         python manage.py migrate csreport
 
